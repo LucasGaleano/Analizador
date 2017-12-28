@@ -47,13 +47,31 @@ def agregar_combinacion(combinacion, archivoAnalizador):
       archivoAnalizador.seek(0, 2)
       archivoAnalizador.write(combinacion + " " + str(1).zfill(20) + "\n")
 
-def analizar_palabra(archivoAnalizador, palabra):
-   letraAnterior = ""
-   for letra in palabra:   
-      combinacion = letraAnterior + letra
-      if(len(combinacion)==2 and letra.isalpha() and letraAnterior.isalpha() ):
-         agregar_combinacion(combinacion,archivoAnalizador)
-         letraAnterior = letra
+
+def dividir_en_transiciones(palabra, cantLetrasTransicion):
+   listaTransiciones=[]
+   indexPalabra = 0
+   longPalabra = len(palabra)
+   while longPalabra > indexPalabra:
+      combinacion = ""
+      for indexCombinacion in range(cantLetrasTransicion+1):
+         try:
+            combinacion += palabra[indexCombinacion + indexPalabra]           
+         except:
+            break
+         if(len(combinacion) != 1):
+            listaTransiciones.append(combinacion)
+      indexPalabra += 1
+   return listaTransiciones
+
+def analizar_palabra(archivoAnalizador, palabra, cantLetrasTransicion):
+   #creo una lista de transiciones
+   listaTransiciones = dividir_en_transiciones(palabra,cantLetrasTransicion)
+   #agrego cada transicion al archivo
+   for transicion in listaTransiciones:
+      if(transicion.isalpha()):
+         agregar_combinacion(transicion,archivoAnalizador)
+
 
 
 
