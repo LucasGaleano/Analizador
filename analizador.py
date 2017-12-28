@@ -13,7 +13,7 @@
 import sys
 
 
-def estaEnArchivo(combinacion, archivoAnalizador):
+def esta_en_archivo(combinacion, archivoAnalizador):
    #devuelve la posicion del archivo donde esta la combinacion y si no devuelve -1
    archivoAnalizador.seek(0)
    seekAnterior = 0
@@ -25,29 +25,35 @@ def estaEnArchivo(combinacion, archivoAnalizador):
       linea = archivoAnalizador.readline()
    return -1
 
-def SumarTransicion(seekUbicacion, archivoAnalizador):
+def sumar_transicion(seekUbicacion, archivoAnalizador):
    #devuelve la linea donde esta la transicion
    archivoAnalizador.seek(seekUbicacion)
    transicion = archivoAnalizador.readline()
    archivoAnalizador.seek(seekUbicacion)
    archivoAnalizador.write(transicion.split()[0] + " " + str(int(transicion.split()[1])+1).zfill(20) + "\n")
 
-def agregarCombinacion(combinacion, archivoAnalizador):
+def agregar_combinacion(combinacion, archivoAnalizador):
    #busca si esta la transicion en la lista y le suma 1,
    #si no esta lo agrega
    
    #se fija si la transicion esta en el archivo
-   seekUbicacion = estaEnArchivo(combinacion, archivoAnalizador)
+   seekUbicacion = esta_en_archivo(combinacion, archivoAnalizador)
    if (seekUbicacion != -1 ):   
       #esta la transicion, consige el valor y le suma 1
-      SumarTransicion(seekUbicacion, archivoAnalizador)
+      sumar_transicion(seekUbicacion, archivoAnalizador)
 
    else:
       #no esta la transicion, va al final del archivo y lo agrega
       archivoAnalizador.seek(0, 2)
       archivoAnalizador.write(combinacion + " " + str(1).zfill(20) + "\n")
 
-
+def analizar_palabra(archivoAnalizador, palabra):
+   letraAnterior = ""
+   for letra in palabra:   
+      combinacion = letraAnterior + letra
+      if(len(combinacion)==2 and letra.isalpha() and letraAnterior.isalpha() ):
+         agregar_combinacion(combinacion,archivoAnalizador)
+         letraAnterior = letra
 
 
 
